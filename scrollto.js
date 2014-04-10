@@ -48,15 +48,27 @@
 			//prepare and scroll to
 			triggerScroll = function(e) {
 				var $trigger = $(e.currentTarget);
+
 				var $destination = $($trigger.attr('href'));
+				var destination_position;
+				var animation_data = prepareAnimationData($trigger.data('scrollto'));
 				//if target doesn't exists, just return true and call default event
-				if ($destination.length < 1) {
+				if ($trigger.attr('href') != '#' && $destination.length < 1) {
 					return true;
 				}
 				//else do scrolling
 				e.preventDefault();
-				//destination position
-				var destination_position = $destination.offset().top;
+
+				//if exists position parameter, go to it instead of element
+				if ($trigger.attr('href') == '#')
+					destination_position = 0;
+				else if (animation_data.position !== undefined) {
+					destination_position = animation_data.position;
+				}
+				else {
+					//destination position
+					destination_position = $destination.offset().top;
+				}
 				//we are currently scrolled to target
 				if (destination_position === cache.$document.scrollTop()) {
 					return false;
